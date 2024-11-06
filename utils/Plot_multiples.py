@@ -31,8 +31,9 @@ def display_directory_selector(base_path):
     combo_widget = widgets.SelectMultiple(
         options=directories,
         value=[],  # Allows selecting multiple items
-        description='Directories',
-        disabled=False
+        description='Directories:',
+        disabled=False,
+        layout = widgets.Layout(width='100%')
     )
     return combo_widget
 
@@ -81,26 +82,14 @@ def plot_results(base_path, selected_dirs, desired_target=64.86370000000001):
         cumulative_data = np.array(cumulative_data)
         average_array = np.mean(cumulative_data, axis=0)
         #print(average_array)
-        # Regex pattern to extract details from filename
-        pattern = (
-            r"(?P<model>[a-zA-Z0-9.-]+(?=_))(?:_Paper_info_)?"  
-            r"(?P<prompt_value>[\w\.-]+)_prompt_experiment_"  
-            r"(?P<experiment>\d+)_temp_"  
-            r"(?P<temp>[\d\.]+)_target_"  
-            r"(?P<target>\d+)_%_Dev_Budget_"  
-            r"(?P<budget>\d+)_recursive_"  
-            r"(?P<recursive>\d+).*\.csv$"
-        )
-        match = re.match(pattern, os.listdir(dir_path)[0])
-        # if match:
-        #     prompt_value = match.group('prompt_value')
-        #     recursive = match.group('recursive')
-            
-        #     # Plot cumulative data
-        #     x = list(range(1, len(cumulative_strengths) + 1))
-        #     plt.plot(x, cumulative_strengths, linestyle='-', label=f"{prompt_value}, Recursive = {recursive}, Runs = {number_of_runs}")
+        
+        percentile_10 = np.percentile(cumulative_data, 10, axis=0)
+        standard_deviation = np.std(cumulative_data, axis=0)
+
         x = list(range(1, len(average_array) + 1))
         plt.plot(x, average_array, linestyle='-', label=f"{dir_name}, Runs = {number_of_runs}")
+        plt.plot(x, percentile_10, linestyle='--', label=f"{dir_name} 10th Percentile")
+        plt.errorbar(x, average_array, yerr=standard_deviation, fmt='-.', label=f"{dir_name} Mean ± Std Dev")
     # Plotting settings
     plt.axhline(y=desired_target, color='r', linestyle='--', label='Desired Target')
     plt.xlabel('Number of Development Cycles')
