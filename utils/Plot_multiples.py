@@ -32,8 +32,7 @@ def display_directory_selector(base_path):
         options=directories,
         value=[],  # Allows selecting multiple items
         description='Directories',
-        disabled=False,
-        layout=widgets.Layout(height='600px')  # Adjust width as needed, keep layout for spacing
+        disabled=False
     )
     return combo_widget
 
