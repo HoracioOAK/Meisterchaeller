@@ -84,15 +84,15 @@ def plot_results(base_path, selected_dirs, desired_target=140):
         #print(average_array)
         
         percentile_10 = np.percentile(cumulative_data, 10, axis=0)
-        percentile_90 = np.percentile(data, 90, axis=0)
+        percentile_90 = np.percentile(cumulative_data, 90, axis=0)
         standard_deviation = np.std(cumulative_data, axis=0)
 
         x = list(range(1, len(average_array) + 1))
         plt.plot(x, average_array, linestyle='-', label=f"{dir_name}, Runs = {number_of_runs}")
-        # plt.fill_between(x,average_array, percentile_10, alpha=0.2, label=f"{dir_name} 10th Percentile")
-        # plt.fill_between(x,average_array, percentile_90, alpha=0.2, label=f"{dir_name} 90th Percentile")
-        plt.fill_between(x,average_array - standard_deviation, average_array + standard_deviation, alpha=0.2, label=f"{dir_name} Std Dev")
-        # plt.errorbar(x, average_array, yerr=standard_deviation, fmt='-.', label=f"{dir_name} Mean ± Std Dev")
+        plt.fill_between(x,average_array, percentile_10, alpha=0.2, label=f"{dir_name} 10th Percentile")
+        plt.fill_between(x,average_array, percentile_90, alpha=0.2, label=f"{dir_name} 90th Percentile")
+        #plt.fill_between(x,average_array - standard_deviation, average_array + standard_deviation, alpha=0.2, label=f"{dir_name} Std Dev")
+        plt.errorbar(x, average_array, yerr=standard_deviation, fmt='-.', label=f"{dir_name} Mean ± Std Dev")
     # Plotting settings
     plt.axhline(y=desired_target, color='r', linestyle='--', label='Desired Target')
     plt.xlabel('Number of Development Cycles')
