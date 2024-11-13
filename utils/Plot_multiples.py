@@ -9,7 +9,7 @@ from IPython.display import display, clear_output
 # Step 1: Display base path dropdown for selection
 def display_base_path_selector():
     base_path_widget = widgets.Dropdown(
-        options=['Results_Concrete', '../Push results'],
+        options=os.listdir(),
         value=None,
         description='Base Path:',
         disabled=False
@@ -40,7 +40,7 @@ def display_directory_selector(base_path):
 # Step 4: Load and process the data from a CSV file
 def load_data(filename, budget=10):
     df = pd.read_csv(filename)
-    strength = df['Compressive Strength'].values
+    strength = df['Shear Modulus'].values
 
     if len(strength) < budget:
         last_value = strength[-1] if len(strength) > 0 else 0
@@ -58,7 +58,7 @@ def load_selected_data(selected_direrctory):
     return data
 
 # Step 6: Trigger the plot based on selected directories
-def plot_results(base_path, selected_dirs, desired_target=64.86370000000001):
+def plot_results(base_path, selected_dirs, desired_target=140):
     plt.figure(figsize=(10, 6))
     #print(selected_dirs)
     # Load and process data
@@ -84,17 +84,20 @@ def plot_results(base_path, selected_dirs, desired_target=64.86370000000001):
         #print(average_array)
         
         percentile_10 = np.percentile(cumulative_data, 10, axis=0)
+        percentile_90 = np.percentile(data, 90, axis=0)
         standard_deviation = np.std(cumulative_data, axis=0)
 
         x = list(range(1, len(average_array) + 1))
         plt.plot(x, average_array, linestyle='-', label=f"{dir_name}, Runs = {number_of_runs}")
-        plt.plot(x, percentile_10, linestyle='--', label=f"{dir_name} 10th Percentile")
-        plt.errorbar(x, average_array, yerr=standard_deviation, fmt='-.', label=f"{dir_name} Mean ± Std Dev")
+        # plt.fill_between(x,average_array, percentile_10, alpha=0.2, label=f"{dir_name} 10th Percentile")
+        # plt.fill_between(x,average_array, percentile_90, alpha=0.2, label=f"{dir_name} 90th Percentile")
+        plt.fill_between(x,average_array - standard_deviation, average_array + standard_deviation, alpha=0.2, label=f"{dir_name} Std Dev")
+        # plt.errorbar(x, average_array, yerr=standard_deviation, fmt='-.', label=f"{dir_name} Mean ± Std Dev")
     # Plotting settings
     plt.axhline(y=desired_target, color='r', linestyle='--', label='Desired Target')
     plt.xlabel('Number of Development Cycles')
-    plt.ylabel('Compressive Strength')
-    plt.title("Compressive Strengths for different prompts")
+    plt.ylabel('Shear Modulus')
+    plt.title("Shear Moduluss for different prompts")
     plt.legend()
     plt.grid(True)
     plt.show()
