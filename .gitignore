@@ -26,7 +26,12 @@ share/python-wheels/
 *.egg
 MANIFEST
 Results/
-Results_Concrete/
+Results_Concrete/BO/
+Results_Concrete/LLM/.DS_Store
+Results_Concrete/.DS_Store
+Results_Concrete/experiment_12_BO_initialsample_4_target_99_%_Dev_Budget_10_1690530830 2.csv
+Results_Concrete/lower_bound_values.csv
+Results_Concrete/mean_values.csv
 
 
 # PyInstaller
