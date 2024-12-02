@@ -68,6 +68,7 @@ def plot_results(base_path, selected_dirs, desired_target=64.8637):
 
         data = load_selected_data(dir_path)
         max_length = max(len(arr) for arr in data)
+        #max_length = 10
         data = [arr for arr in data if len(arr) == max_length]
         #print(data)
         data = np.array(data)
